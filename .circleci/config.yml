@@ -15,16 +15,18 @@ install_steps: &install_steps
     steps:
         - checkout
         - restore_cache:
-              name: Restore cache
+              name: Restore node_modules cache
               keys:
-                  - cache-{{ checksum "package.json" }}
+                  - dependency-cache-{{ .Branch }}-{{ checksum "package.json" }}
+                  - dependency-cache-{{ .Branch }}-
+                  - dependency-cache-
         - run:
               name: Installing Dependencies
               command: |
                   yarn install --silent --frozen-lockfile
         - save_cache:
-              name: Save cache
-              key: cache-{{ checksum "package.json" }}
+              name: Save node_modules cache
+              key: dependency-cache-{{ .Branch }}-{{ checksum "package.json" }}
               paths:
                   - ~/.cache
         - persist_to_workspace:
